@@ -5,12 +5,24 @@ import type { App } from "octokit";
 
 import { env } from "./env";
 
-const privateKeyPath = resolve(process.cwd(), ".private-key.pem");
-const privateKey = z.string().parse(readFileSync(privateKeyPath, "utf8"));
+const getPrivateKey = () => {
+  if (env.NODE_ENV === "production") {
+    if (!env.GH_PRIVATE_KEY) {
+      throw new Error(
+        "GH_PRIVATE_KEY is required in production but is not provided."
+      );
+    }
+
+    return env.GH_PRIVATE_KEY;
+  }
+
+  const privateKeyPath = resolve(process.cwd(), ".private-key.pem");
+  return z.string().parse(readFileSync(privateKeyPath, "utf8"));
+};
 
 export const GHConfig = {
   appId: env.GH_APP_ID,
-  privateKey,
+  privateKey: getPrivateKey(),
   webhooks: {
     secret: env.GH_WEBHOOK_SECRET,
   },

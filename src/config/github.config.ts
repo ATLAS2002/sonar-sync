@@ -9,13 +9,13 @@ const privateKeyPath = resolve(process.cwd(), ".private-key.pem");
 const privateKey = z.string().parse(readFileSync(privateKeyPath, "utf8"));
 
 export const GHConfig = {
-  appId: env.GITHUB_APP_ID,
+  appId: env.GH_APP_ID,
   privateKey,
   webhooks: {
-    secret: env.GITHUB_WEBHOOK_SECRET,
+    secret: env.GH_WEBHOOK_SECRET,
   },
 } satisfies AppConfig;
 
 export type AppConfig = ConstructorParameters<typeof App>[0];
 
-export const installationId = env.GITHUB_INSTALLATION_ID;
+export const installationId = env.GH_INSTALLATION_ID;
